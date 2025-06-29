@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weiqi (Go) Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Weiqi (Go) Game</h1>
+            <div class="game-info">
+                <div class="player black">Black: <span id="black-captures">0</span></div>
+                <div class="player white">White: <span id="white-captures">0</span></div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="game-board" id="board"></div>
+            <div class="controls">
+                <button id="undo">Undo</button>
+                <button id="pass">Pass</button>
+                <button id="resign">Resign</button>
+                <button id="new-game">New Game</button>
+            </div>
+        </main>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html> 

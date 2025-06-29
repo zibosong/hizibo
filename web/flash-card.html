@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+
+        .nav-tab.active:hover {
+            background: #5a6fd8;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-count {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .difficulty-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .difficulty-easy { background: #d4edda; color: #155724; }
+        .difficulty-medium { background: #fff3cd; color: #856404; }
+        .difficulty-hard { background: #f8d7da; color: #721c24; }
+
+        .proficiency-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .proficiency-beginner { background: #e2e3e5; color: #383d41; }
+        .proficiency-intermediate { background: #cce5ff; color: #004085; }
+        .proficiency-advanced { background: #d1ecf1; color: #0c5460; }
+        .proficiency-expert { background: #d4edda; color: #155724; }
+
+        .flashcard {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .flashcard-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flashcard-content {
+            padding: 20px;
+        }
+
+        .flashcard-front, .flashcard-back {
+            margin-bottom: 15px;
+        }
+
+        .media-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .media-input {
+            margin-top: 10px;
+        }
+
+        .study-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .study-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .study-card.flipped .flashcard-front {
+            display: none;
+        }
+
+        .study-card.flipped .flashcard-back {
+            display: block;
+        }
+
+        .study-card:not(.flipped) .flashcard-back {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tag-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .tag-item {
+            padding: 6px 12px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .tag-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .tag-item.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .selected-tags {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            min-height: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .selected-tag {
+            padding: 4px 8px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .selected-tag .remove-tag {
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0 3px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .selected-tag .remove-tag:hover {
+            background: rgba(255,255,255,0.5);
+        }
+
+        .flashcard-tags {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .flashcard-tag {
+            padding: 2px 6px;
+            background: #e9ecef;
+            color: #495057;
+            border-radius: 8px;
+            font-size: 11px;
+        }
+
+        .form-text {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .study-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Flashcard App</h1>
+            <p>Master your knowledge with interactive flashcards</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('sets')">Flashcard Sets</button>
+            <button class="nav-tab" onclick="showTab('create')">Create New</button>
+            <button class="nav-tab" onclick="showTab('study')">Study Mode</button>
+            <button class="nav-tab" onclick="showTab('stats')">Statistics</button>
+        </div>
+
+        <div class="content">
+            <!-- Flashcard Sets Tab -->
+            <div id="sets" class="tab-content active">
+                <h2>Your Flashcard Sets</h2>
+                <div id="sets-container" class="card-grid">
+                    <!-- Sets will be populated here -->
+                </div>
+            </div>
+
+            <!-- Create New Tab -->
+            <div id="create" class="tab-content">
+                <h2>Create New Flashcard Set</h2>
+                <form id="set-form">
+                    <div class="form-group">
+                        <label for="set-name">Set Name:</label>
+                        <input type="text" id="set-name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="set-description">Description:</label>
+                        <textarea id="set-description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Set</button>
+                </form>
+
+                <hr style="margin: 30px 0;">
+
+                <h2>Add Flashcards</h2>
+                <form id="flashcard-form">
+                    <div class="form-group">
+                        <label for="flashcard-set">Select Set:</label>
+                        <select id="flashcard-set" class="form-control" required>
+                            <option value="">Choose a set...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="flashcard-front">Front (Question):</label>
+                        <textarea id="flashcard-front" class="form-control" rows="3" required></textarea>
+                        <input type="file" id="front-media" class="media-input" accept="image/*,video/*,audio/*">
+                        <div id="front-media-preview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="flashcard-back">Back (Answer):</label>
+                        <textarea id="flashcard-back" class="form-control" rows="3" required></textarea>
+                        <input type="file" id="back-media" class="media-input" accept="image/*,video/*,audio/*">
+                        <div id="back-media-preview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="difficulty">Difficulty Level:</label>
+                        <select id="difficulty" class="form-control" required>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="proficiency">Proficiency Level:</label>
+                        <select id="proficiency" class="form-control" required>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="flashcard-tags">Tags (separated by commas):</label>
+                        <input type="text" id="flashcard-tags" class="form-control" placeholder="e.g., math, algebra, equations">
+                        <small class="form-text text-muted">Enter tags separated by commas. Tags help organize and filter flashcards.</small>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Flashcard</button>
+                </form>
+            </div>
+
+            <!-- Study Mode Tab -->
+            <div id="study" class="tab-content">
+                <h2>Study Mode</h2>
+                <div class="form-group">
+                    <label for="study-set">Select Set to Study:</label>
+                    <select id="study-set" class="form-control" onchange="loadStudySet()">
+                        <option value="">Choose a set...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="study-tags">Filter by Tags (optional):</label>
+                    <div id="available-tags" class="tag-selector">
+                        <!-- Available tags will be populated here -->
+                    </div>
+                    <div id="selected-tags-display" class="selected-tags">
+                        <!-- Selected tags will be displayed here -->
+                    </div>
+                </div>
+
+                <div id="study-container" class="hidden">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="study-card" id="study-card">
+                        <div class="flashcard-front">
+                            <h3 id="study-front-text"></h3>
+                            <div id="study-front-media"></div>
+                        </div>
+                        <div class="flashcard-back">
+                            <h3 id="study-back-text"></h3>
+                            <div id="study-back-media"></div>
+                        </div>
+                    </div>
+                    <div class="study-controls">
+                        <button class="btn btn-secondary" onclick="flipCard()">Flip Card</button>
+                        <button class="btn btn-danger" onclick="markIncorrect()">Incorrect</button>
+                        <button class="btn btn-success" onclick="markCorrect()">Correct</button>
+                        <button class="btn btn-primary" onclick="nextCard()">Next Card</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Tab -->
+            <div id="stats" class="tab-content">
+                <h2>Your Progress</h2>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-sets">0</div>
+                        <div class="stat-label">Total Sets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-cards">0</div>
+                        <div class="stat-label">Total Cards</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="correct-answers">0</div>
+                        <div class="stat-label">Correct Answers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="accuracy">0%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let flashcardSets = JSON.parse(localStorage.getItem('flashcardSets')) || [];
+        let currentStudySet = null;
+        let currentCardIndex = 0;
+        let selectedTags = [];
+        let filteredCards = [];
+        let studyStats = JSON.parse(localStorage.getItem('studyStats')) || {
+            totalCorrect: 0,
+            totalAttempts: 0
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSets();
+            updateSetSelects();
+            updateStats();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Set form
+            document.getElementById('set-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                createNewSet();
+            });
+
+            // Flashcard form
+            document.getElementById('flashcard-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addNewFlashcard();
+            });
+
+            // Media file inputs
+            document.getElementById('front-media').addEventListener('change', function(e) {
+                handleMediaInput(e, 'front-media-preview');
+            });
+
+            document.getElementById('back-media').addEventListener('change', function(e) {
+                handleMediaInput(e, 'back-media-preview');
+            });
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked nav tab
+            event.target.classList.add('active');
+        }
+
+        function createNewSet() {
+            const name = document.getElementById('set-name').value;
+            const description = document.getElementById('set-description').value;
+
+            const newSet = {
+                id: Date.now(),
+                name: name,
+                description: description,
+                flashcards: [],
+                createdAt: new Date().toISOString()
+            };
+
+            flashcardSets.push(newSet);
+            saveData();
+            renderSets();
+            updateSetSelects();
+            updateStats();
+
+            // Clear form
+            document.getElementById('set-form').reset();
+            alert('Flashcard set created successfully!');
+        }
+
+        function addNewFlashcard() {
+            const setId = parseInt(document.getElementById('flashcard-set').value);
+            const front = document.getElementById('flashcard-front').value;
+            const back = document.getElementById('flashcard-back').value;
+            const difficulty = document.getElementById('difficulty').value;
+            const proficiency = document.getElementById('proficiency').value;
+            const tagsInput = document.getElementById('flashcard-tags').value;
+
+            const set = flashcardSets.find(s => s.id === setId);
+            if (!set) {
+                alert('Please select a valid set');
+                return;
+            }
+
+            // Process tags
+            const tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+
+            const newCard = {
+                id: Date.now(),
+                front: front,
+                back: back,
+                difficulty: difficulty,
+                proficiency: proficiency,
+                tags: tags,
+                frontMedia: null,
+                backMedia: null,
+                correctCount: 0,
+                incorrectCount: 0,
+                lastStudied: null
+            };
+
+            // Handle media files
+            const frontMediaFile = document.getElementById('front-media').files[0];
+            const backMediaFile = document.getElementById('back-media').files[0];
+
+            if (frontMediaFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    newCard.frontMedia = {
+                        type: frontMediaFile.type,
+                        data: e.target.result
+                    };
+                    set.flashcards.push(newCard);
+                    saveData();
+                    renderSets();
+                    updateStats();
+                };
+                reader.readAsDataURL(frontMediaFile);
+            } else {
+                set.flashcards.push(newCard);
+                saveData();
+                renderSets();
+                updateStats();
+            }
+
+            if (backMediaFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    newCard.backMedia = {
+                        type: backMediaFile.type,
+                        data: e.target.result
+                    };
+                    saveData();
+                };
+                reader.readAsDataURL(backMediaFile);
+            }
+
+            // Clear form
+            document.getElementById('flashcard-form').reset();
+            document.getElementById('front-media-preview').innerHTML = '';
+            document.getElementById('back-media-preview').innerHTML = '';
+            alert('Flashcard added successfully!');
+        }
+
+        function handleMediaInput(event, previewId) {
+            const file = event.target.files[0];
+            const preview = document.getElementById(previewId);
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (file.type.startsWith('image/')) {
+                        preview.innerHTML = `<img src="${e.target.result}" class="media-preview">`;
+                    } else if (file.type.startsWith('video/')) {
+                        preview.innerHTML = `<video src="${e.target.result}" class="media-preview" controls></video>`;
+                    } else if (file.type.startsWith('audio/')) {
+                        preview.innerHTML = `<audio src="${e.target.result}" class="media-preview" controls></audio>`;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderSets() {
+            const container = document.getElementById('sets-container');
+            container.innerHTML = '';
+
+            if (flashcardSets.length === 0) {
+                container.innerHTML = '<p>No flashcard sets created yet. Create your first set!</p>';
+                return;
+            }
+
+            flashcardSets.forEach(set => {
+                // Get all unique tags from this set
+                const allTags = [...new Set(set.flashcards.flatMap(card => card.tags || []))];
+                const tagsHtml = allTags.length > 0 ? 
+                    `<div class="flashcard-tags">${allTags.map(tag => `<span class="flashcard-tag">${tag}</span>`).join('')}</div>` : '';
+
+                const setCard = document.createElement('div');
+                setCard.className = 'card';
+                setCard.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-title">${set.name}</div>
+                        <div class="card-count">${set.flashcards.length} cards</div>
+                    </div>
+                    <p>${set.description || 'No description'}</p>
+                    ${tagsHtml}
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="studySet(${set.id})">Study</button>
+                        <button class="btn btn-secondary" onclick="editSet(${set.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteSet(${set.id})">Delete</button>
+                    </div>
+                `;
+                container.appendChild(setCard);
+            });
+        }
+
+        function updateSetSelects() {
+            const selects = ['flashcard-set', 'study-set'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">Choose a set...</option>';
+                
+                flashcardSets.forEach(set => {
+                    const option = document.createElement('option');
+                    option.value = set.id;
+                    option.textContent = set.name;
+                    select.appendChild(option);
+                });
+                
+                select.value = currentValue;
+            });
+        }
+
+        function studySet(setId) {
+            showTab('study');
+            document.getElementById('study-set').value = setId;
+            loadStudySet();
+        }
+
+        function loadStudySet() {
+            const setId = parseInt(document.getElementById('study-set').value);
+            currentStudySet = flashcardSets.find(s => s.id === setId);
+            
+            if (currentStudySet) {
+                selectedTags = [];
+                updateAvailableTags();
+                updateSelectedTagsDisplay();
+                applyTagFilter();
+            } else {
+                document.getElementById('study-container').classList.add('hidden');
+                document.getElementById('available-tags').innerHTML = '';
+                document.getElementById('selected-tags-display').innerHTML = '';
+            }
+        }
+
+        function updateAvailableTags() {
+            if (!currentStudySet) return;
+            
+            const allTags = [...new Set(currentStudySet.flashcards.flatMap(card => card.tags || []))];
+            const availableTagsContainer = document.getElementById('available-tags');
+            
+            if (allTags.length === 0) {
+                availableTagsContainer.innerHTML = '<p class="text-muted">No tags available in this set.</p>';
+                return;
+            }
+            
+            availableTagsContainer.innerHTML = allTags.map(tag => 
+                `<span class="tag-item" onclick="toggleTag('${tag}')">${tag}</span>`
+            ).join('');
+        }
+
+        function toggleTag(tag) {
+            const index = selectedTags.indexOf(tag);
+            if (index > -1) {
+                selectedTags.splice(index, 1);
+            } else {
+                selectedTags.push(tag);
+            }
+            
+            updateSelectedTagsDisplay();
+            updateTagSelectors();
+            applyTagFilter();
+        }
+
+        function removeTag(tag) {
+            const index = selectedTags.indexOf(tag);
+            if (index > -1) {
+                selectedTags.splice(index, 1);
+                updateSelectedTagsDisplay();
+                updateTagSelectors();
+                applyTagFilter();
+            }
+        }
+
+        function updateSelectedTagsDisplay() {
+            const container = document.getElementById('selected-tags-display');
+            
+            if (selectedTags.length === 0) {
+                container.innerHTML = '<span class="text-muted">No tags selected - showing all cards</span>';
+                return;
+            }
+            
+            container.innerHTML = selectedTags.map(tag => 
+                `<span class="selected-tag">${tag}<span class="remove-tag" onclick="removeTag('${tag}')">×</span></span>`
+            ).join('');
+        }
+
+        function updateTagSelectors() {
+            document.querySelectorAll('.tag-item').forEach(item => {
+                const tag = item.textContent;
+                if (selectedTags.includes(tag)) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        function applyTagFilter() {
+            if (!currentStudySet) return;
+            
+            if (selectedTags.length === 0) {
+                filteredCards = [...currentStudySet.flashcards];
+            } else {
+                filteredCards = currentStudySet.flashcards.filter(card => 
+                    card.tags && card.tags.some(tag => selectedTags.includes(tag))
+                );
+            }
+            
+            if (filteredCards.length > 0) {
+                currentCardIndex = 0;
+                document.getElementById('study-container').classList.remove('hidden');
+                displayCurrentCard();
+                updateProgress();
+            } else {
+                document.getElementById('study-container').classList.add('hidden');
+                if (selectedTags.length > 0) {
+                    alert('No flashcards found with the selected tags.');
+                }
+            }
+        }
+
+        function displayCurrentCard() {
+            if (!filteredCards || currentCardIndex >= filteredCards.length) {
+                return;
+            }
+
+            const card = filteredCards[currentCardIndex];
+            const studyCard = document.getElementById('study-card');
+            
+            // Reset card state
+            studyCard.classList.remove('flipped');
+            
+            // Set front content
+            document.getElementById('study-front-text').textContent = card.front;
+            const frontMedia = document.getElementById('study-front-media');
+            frontMedia.innerHTML = '';
+            if (card.frontMedia) {
+                if (card.frontMedia.type.startsWith('image/')) {
+                    frontMedia.innerHTML = `<img src="${card.frontMedia.data}" class="media-preview">`;
+                } else if (card.frontMedia.type.startsWith('video/')) {
+                    frontMedia.innerHTML = `<video src="${card.frontMedia.data}" class="media-preview" controls></video>`;
+                } else if (card.frontMedia.type.startsWith('audio/')) {
+                    frontMedia.innerHTML = `<audio src="${card.frontMedia.data}" class="media-preview" controls></audio>`;
+                }
+            }
+
+            // Set back content
+            document.getElementById('study-back-text').textContent = card.back;
+            const backMedia = document.getElementById('study-back-media');
+            backMedia.innerHTML = '';
+            if (card.backMedia) {
+                if (card.backMedia.type.startsWith('image/')) {
+                    backMedia.innerHTML = `<img src="${card.backMedia.data}" class="media-preview">`;
+                } else if (card.backMedia.type.startsWith('video/')) {
+                    backMedia.innerHTML = `<video src="${card.backMedia.data}" class="media-preview" controls></video>`;
+                } else if (card.backMedia.type.startsWith('audio/')) {
+                    backMedia.innerHTML = `<audio src="${card.backMedia.data}" class="media-preview" controls></audio>`;
+                }
+            }
+        }
+
+        function flipCard() {
+            const studyCard = document.getElementById('study-card');
+            studyCard.classList.toggle('flipped');
+        }
+
+        function markCorrect() {
+            if (filteredCards && currentCardIndex < filteredCards.length) {
+                const card = filteredCards[currentCardIndex];
+                card.correctCount++;
+                card.lastStudied = new Date().toISOString();
+                studyStats.totalCorrect++;
+                studyStats.totalAttempts++;
+                saveData();
+                nextCard();
+            }
+        }
+
+        function markIncorrect() {
+            if (filteredCards && currentCardIndex < filteredCards.length) {
+                const card = filteredCards[currentCardIndex];
+                card.incorrectCount++;
+                card.lastStudied = new Date().toISOString();
+                studyStats.totalAttempts++;
+                saveData();
+                nextCard();
+            }
+        }
+
+        function nextCard() {
+            if (filteredCards) {
+                currentCardIndex++;
+                if (currentCardIndex >= filteredCards.length) {
+                    // Study session complete
+                    const message = selectedTags.length > 0 
+                        ? `Congratulations! You have completed studying all cards with tags: ${selectedTags.join(', ')}.`
+                        : 'Congratulations! You have completed studying this set.';
+                    alert(message);
+                    currentCardIndex = 0;
+                    document.getElementById('study-container').classList.add('hidden');
+                    updateStats();
+                } else {
+                    displayCurrentCard();
+                    updateProgress();
+                }
+            }
+        }
+
+        function updateProgress() {
+            if (filteredCards && filteredCards.length > 0) {
+                const progress = ((currentCardIndex + 1) / filteredCards.length) * 100;
+                document.getElementById('progress-fill').style.width = progress + '%';
+            }
+        }
+
+        function editSet(setId) {
+            // Implementation for editing sets
+            alert('Edit functionality coming soon!');
+        }
+
+        function deleteSet(setId) {
+            if (confirm('Are you sure you want to delete this flashcard set? This action cannot be undone.')) {
+                flashcardSets = flashcardSets.filter(set => set.id !== setId);
+                saveData();
+                renderSets();
+                updateSetSelects();
+                updateStats();
+            }
+        }
+
+        function updateStats() {
+            const totalSets = flashcardSets.length;
+            const totalCards = flashcardSets.reduce((sum, set) => sum + set.flashcards.length, 0);
+            const correctAnswers = studyStats.totalCorrect;
+            const accuracy = studyStats.totalAttempts > 0 
+                ? Math.round((studyStats.totalCorrect / studyStats.totalAttempts) * 100) 
+                : 0;
+
+            document.getElementById('total-sets').textContent = totalSets;
+            document.getElementById('total-cards').textContent = totalCards;
+            document.getElementById('correct-answers').textContent = correctAnswers;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+
+        function saveData() {
+            localStorage.setItem('flashcardSets', JSON.stringify(flashcardSets));
+            localStorage.setItem('studyStats', JSON.stringify(studyStats));
+        }
+    </script>
+</body>
+</html>

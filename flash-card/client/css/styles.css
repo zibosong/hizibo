@@ -1,0 +1,243 @@
+/* General Body Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+main {
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* Flashcard Styles */
+.flashcard-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.flashcard {
+    width: 300px;
+    height: 200px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+.flashcard.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.flashcard-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+.flashcard-face--back {
+    transform: rotateY(180deg);
+    background-color: #f0f0f0;
+}
+
+/* Button and Form Styles */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Layout Containers */
+.card-sets-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.card-set {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-set h2 {
+    margin-top: 0;
+}
+
+.card-set p {
+    flex-grow: 1; /* Pushes button to the bottom */
+}
+
+.flashcards-view h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #444;
+}
+
+/* Forms */
+.form-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+.form-container h3 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.form-container input,
+.form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box; /* Important */
+    font-family: inherit;
+}
+
+.form-container textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.form-container button {
+    width: 100%;
+}
+
+/* Utility Buttons */
+.back-btn {
+    background-color: #6c757d;
+    margin-bottom: 1rem;
+}
+.back-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Card Content */
+.flashcard-content img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 5px;
+}
+
+/* Difficulty & Tags */
+.card-meta {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    right: 10px;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.difficulty-level {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.difficulty-level span {
+    font-weight: bold;
+}
+
+.difficulty-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.difficulty-dot.active {
+    background-color: #007bff;
+}
+
+.tags-container {
+    margin-top: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background: #e9ecef;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-right: 5px;
+}
+
+.tag-remove {
+    margin-left: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #999;
+}
+.tag-remove:hover {
+    color: #333;
+}
+
+.add-tag-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.add-tag-form input {
+    flex-grow: 1;
+}
+
+.add-tag-form button {
+    white-space: nowrap; /* Prevent button text from wrapping */
+} 
